@@ -4,6 +4,7 @@ import 'package:your_zodiac_app/core/utils/app_text_style.dart';
 import 'package:your_zodiac_app/core/utils/app_colors.dart';
 import 'package:your_zodiac_app/data/models/month_names_model.dart';
 import 'package:your_zodiac_app/features/widgets/custom_floating_action_button.dart';
+import 'package:your_zodiac_app/features/presentation/function/get_zodiac.dart';
 
 class CustomScrollDatePicker extends StatefulWidget {
   const CustomScrollDatePicker({super.key});
@@ -15,10 +16,18 @@ class CustomScrollDatePicker extends StatefulWidget {
 class _CustomScrollDatePickerState extends State<CustomScrollDatePicker> {
   DateTime _selectedDate = DateTime.now();
 
-  final List<DateTime> _dates = List.generate(
-    365,
-    (index) => DateTime.now().subtract(Duration(days: index)),
-  );
+  List<DateTime> get _dates {
+    final now = DateTime.now();
+    final year = now.year;
+    final List<DateTime> days = [];
+    for (int month = 1; month <= 12; month++) {
+      int daysInMonth = DateTime(year, month + 1, 0).day;
+      for (int day = 1; day <= daysInMonth; day++) {
+        days.add(DateTime(year, month, day));
+      }
+    }
+    return days;
+  }
 
   int get _selectedIndex => _dates.indexWhere(
     (d) =>
@@ -36,6 +45,7 @@ class _CustomScrollDatePickerState extends State<CustomScrollDatePicker> {
   @override
   Widget build(BuildContext context) {
     List<String> monthNames = MonthNamesModel.monthNames;
+    getZodiac(_selectedDate.day, _selectedDate.month);
     return Container(
       color: AppColors.deepPurpleColor,
       child: Column(
@@ -45,17 +55,26 @@ class _CustomScrollDatePickerState extends State<CustomScrollDatePicker> {
             children: [
               Text(
                 "${_selectedDate.day}",
-                style: AppTextStyle.lora24w700.copyWith(color: Colors.white),
+                style: AppTextStyle.lora24w700.copyWith(
+                  fontFamily: 'Recoleta',
+                  color: Colors.white,
+                ),
               ),
               SizedBox(width: 34),
               Text(
                 monthNames[_selectedDate.month - 1],
-                style: AppTextStyle.lora24w700.copyWith(color: Colors.white),
+                style: AppTextStyle.lora24w700.copyWith(
+                  fontFamily: 'Recoleta',
+                  color: Colors.white,
+                ),
               ),
               SizedBox(width: 34),
               Text(
                 "${_selectedDate.year}",
-                style: AppTextStyle.lora24w700.copyWith(color: Colors.white),
+                style: AppTextStyle.lora24w700.copyWith(
+                  fontFamily: 'Recoleta',
+                  color: Colors.white,
+                ),
               ),
             ],
           ),
@@ -91,6 +110,7 @@ class _CustomScrollDatePickerState extends State<CustomScrollDatePicker> {
                 return AnimatedDefaultTextStyle(
                   duration: Duration(milliseconds: 200),
                   style: AppTextStyle.lora24w700.copyWith(
+                    fontFamily: 'Recoleta',
                     fontSize: isSelected ? 22 : 18,
                     fontWeight: isSelected
                         ? FontWeight.bold
@@ -99,8 +119,9 @@ class _CustomScrollDatePickerState extends State<CustomScrollDatePicker> {
                   ),
                   child: Center(
                     child: Text(
-                      "${date.day}     ${monthNames[date.month - 1]}      ${date.year} ",
+                      "${date.day}        ${monthNames[date.month - 1]}        ${date.year} ",
                       style: AppTextStyle.lora24w700.copyWith(
+                        fontFamily: 'Recoleta',
                         fontSize: isSelected ? 22 : 18,
                         fontWeight: isSelected
                             ? FontWeight.bold
